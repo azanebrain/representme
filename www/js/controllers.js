@@ -40,8 +40,17 @@ angular.module('starter.controllers', [])
     }, 1000);
   };
   
+  // Get an object from an array by property
+  $scope.getArrayObjByProp = function(array, prop, val) {
+    var result = array.filter(function( obj ) {
+      return result = obj[prop] == val;
+    });
+  }
+
   // Track the user's ratings of legislation
   $scope.userRatings = [];
+  // The user's grades of politicians
+  $scope.userGrades = {};
   
   // Politicians
   // 'f'or
@@ -56,67 +65,58 @@ angular.module('starter.controllers', [])
       legislation4: 'a',
       legislation5: 'u',
       legislation6: 'a',
+      legislation7: 'a',
+      legislation8: 'a',
+    },
+    {
+      name: 'HanSolo',
+      legislation1: 'a',
+      legislation2: 'f',
+      legislation3: 'a',
+      legislation4: 'a',
+      legislation5: 'u',
+      legislation6: 'a',
+      legislation7: 'a',
+      legislation8: 'a',
     },
   ];
 })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', ID: 1 },
-    { title: 'Chill', ID: 2 },
-    { title: 'Dubstep', ID: 3 },
-    { title: 'Indie', ID: 4 },
-    { title: 'Rap', ID: 5 },
-    { title: 'Cowbell', ID: 6 }
-  ];
-})
-
-.controller('LegislationCtrl', function($scope, $stateParams, $state) {
+.controller('LegislationCtrl', function($scope, $stateParams, $state, resources) {
+  // Set the post ID if it has been passed to the view
   var id = $stateParams.id ? $stateParams.id : null;
-  console.log('here. id:', id);
-  $scope.legislations = [
-    { title: 'Legislation 1', id: 1,
-      content: '<p>Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI.</p>',
-      meta: {
-        link: 'http://representmenow.co',
-      },
-    },
-    { title: 'Legislation 2', id: 2,
-      content: '<p>Efficiently unleash cross-media information without cross-media value. Quickly maximize timely deliverables for real-time schemas. Dramatically maintain clicks-and-mortar solutions without functional solutions.</p>',
-      meta: {
-        link: 'http://representmenow.co',
-      },
-    },
-    { title: 'Legislation 3', id: 3,
-      content: '<p>Completely synergize resource taxing relationships via premier niche markets. Professionally cultivate one-to-one customer service with robust ideas. Dynamically innovate resource-leveling customer service for state of the art customer service.</p>',
-      meta: {
-        link: 'http://representmenow.co',
-      },
-    },
-    { title: 'Legislation 4', id: 4,
-      content: '<p>Objectively innovate empowered manufactured products whereas parallel platforms. Holisticly predominate extensible testing procedures for reliable supply chains. Dramatically engage top-line web services vis-a-vis cutting-edge deliverables.</p>',
-      meta: {
-        link: 'http://representmenow.co',
-      },
-    },
-    { title: 'Legislation 5', id: 5,
-      content: '<p>Proactively envisioned multimedia based expertise and cross-media growth strategies. Seamlessly visualize quality intellectual capital without superior collaboration and idea-sharing. Holistically pontificate installed base portals after maintainable products.</p>',
-      meta: {
-        link: 'http://representmenow.co',
-      },
-    },
-    { title: 'Legislation 6', id: 6,
-      content: '<p>Phosfluorescently engage worldwide methodologies with web-enabled technology. Interactively coordinate proactive e-commerce via process-centric "outside the box" thinking. Completely pursue scalable customer service through sustainable potentialities.</p>',
-      meta: {
-        link: 'http://representmenow.co',
-      },
-    }
-  ];
-  if ( id ) {
-    $scope.legislation = $scope.legislations[id - 1];
-    $scope.id = id;
+  console.log('loading legislationctrl');
+  var loadLegislation = function(){
+    console.log('loading legislation');
   }
+  // Only request data if it hasn't already been loaded
+  // Get the post data
+  resources.posts.query({
+    'type[]': 'legislation',
+    'filter[status]': 'publish',
+    'filter[order]': 'DESC',
+  },
+  function(posts) {
+    // Success callback
+    console.log('post: ',posts);
+    $scope.posts = posts;
+    $scope.legislations = posts;
+    if ( id ) {
+      $scope.legislation = posts[id - 1];
+      $scope.id = id;
+    } 
+  },
+  function(error) {
+    // Error callback
+    console.warn('An error occured:',error);
+    $scope.posts = [{
+      title: 'Error',
+      content: error.data[0].message,
+    }];
+  });
   
+  // Determines if there is another page after the current legislation page 
+  // @param id (int) The legislation ID
   $scope.nextPageValue = function(id) {
     if ($scope.legislations[id]) {
       return parseInt(id) + 1;
@@ -124,9 +124,10 @@ angular.module('starter.controllers', [])
     console.log('on last page');
     return false;
   }
-  // Next page
-  // id (int) The ID of the current legislation item
-  // action (string) The action to take [approve, deny, undecided]
+  
+  // Direct the user to the next Legislation item
+  // @param id (int) The ID of the current legislation item
+  // @param action (string) The action to take [approve, deny, undecided]
   $scope.next = function(id, action) {
     if ( action === 'for' ) {
       console.log('I am for ', id);
@@ -139,48 +140,67 @@ angular.module('starter.controllers', [])
         stance: 'a'
       };
     } else {
-      console.log('I am undecided', id);
+      console.log('I am undecided ', id);
       $scope.userRatings[id] = {
         stance: 'u'
       };
     }
     var nextPage = $scope.nextPageValue(id);
     if ( false != nextPage ) {
+      // There is another legislation item to evaluate
+      // Redirect the user
       $state.go('app.single',{id: nextPage });
     } else {
+      // The user is on the last legislation item
       console.log('all done. My stance:', $scope.userRatings);
-      // foreach (var i = 0; i < $scope.politicians.length; i++) {
-        // console.log('evaluating politician: ' + politician.name);
-        for (var i = 0; i < $scope.politicians.length; i++) {
-            console.log('evaluating politician ' + $scope.politicians[i].name);
-            console.log('$scope.userRatings.length', $scope.userRatings.length);
-            var politicianGrade = 0;
-            for (var x=0; x < $scope.userRatings.length; x++) {
-              // Only evaluate the ones the user has done becasue they might not have answered all
-              if ($scope.userRatings[x]) {
-                var userStance = $scope.userRatings[6];
-              
-                console.log('comparing politician stance on ' + x + ': ' + $scope.politicians[i]['legislation' + x] +', against user stance: ' + $scope.userRatings[x].stance );
-                if ( 'u' == $scope.politicians[i]['legislation' + x] 
-                   ||  $scope.userRatings[x].stance != $scope.politicians[i]['legislation' + x]
-                ) {
-                  // If the politician hasn't voted
-                  // or if the politician's stance disagrees with the user
-                  $scope.userRatings[x].value = -1;
-                  politicianGrade -= 1;
-                } else {
-                  $scope.userRatings[x].value = 1;
-                  politicianGrade++;
-                }
-                console.log('politicianGrade:' + politicianGrade);
-              }
+      for (var i = 0; i < $scope.politicians.length; i++) {
+        console.group('evaluating politician ' + $scope.politicians[i].name);
+        console.log('$scope.userRatings.length', $scope.userRatings.length);
+        var politicianScore = 0;
+        var agreementCounter = 0;
+        for (var x=0; x < $scope.userRatings.length; x++) {
+          // Only evaluate the ones the user has done becasue they might not have answered all
+          if ($scope.userRatings[x]) {
+            var userStance = $scope.userRatings[6];
+            console.log('comparing politician stance on ' + x + ': ' + $scope.politicians[i]['legislation' + x] +', against user stance: ' + $scope.userRatings[x].stance );
+            if ( 'u' == $scope.politicians[i]['legislation' + x] 
+               ||  $scope.userRatings[x].stance != $scope.politicians[i]['legislation' + x]
+            ) {
+              // If the politician hasn't voted
+              // or if the politician's stance disagrees with the user
+              $scope.userRatings[x].value = -1;
+              politicianScore -= 1;
+            } else {
+              $scope.userRatings[x].value = 1;
+              politicianScore++;
+              agreementCounter++;
             }
+          }
         }
-        alert('Your score against Darth Vader is: ' + politicianGrade);
-      // }
+        // Compile the results of this politician compared to this user's stance
+
+        // Count the number of object elements in an array
+        function objectLength(obj) {
+          var result = 0;
+          for(var prop in obj) {
+            if (obj.hasOwnProperty(prop)) {
+              result++;
+            }
+          }
+          return result;
+        }
+        // Compile the user's grade of this politician
+        $scope.userGrades[i] = {
+          answeredQuestions: objectLength($scope.userRatings),
+          politicianScore: politicianScore,
+          agreementCounter: agreementCounter,
+        }
+        
+        console.log('politicianScore: ' + $scope.userGrades[i].politicianScore);
+        console.log('agreementCounter: ' + $scope.userGrades[i].agreementCounter + ' out of '  + $scope.userGrades[i].answeredQuestions);
+        // alert('Your score against ' + $scope.politicians[i].name + ' is: ' + politicianScore);
+        console.groupEnd();
+      }
     }
   };
-})
-
-.controller('PlaylistCtrl', function($scope, $stateParams) {
 });

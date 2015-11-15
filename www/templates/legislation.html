@@ -1,6 +1,6 @@
 <ion-view view-title="Legislation">
   <ion-content class="padding">
-    <h1>{{legislation.title}}</h1>
+    <h1 ng-bind-html="legislation.title"></h1>
     <div ng-bind-html="legislation.content"></div>
     <br><br>
     <div class="button-bar">
