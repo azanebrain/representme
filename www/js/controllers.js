@@ -176,7 +176,7 @@ angular.module('starter.controllers', [])
               }
             }
         }
-        alert('Your score against Darht Vader is: ' + politicianGrade);
+        alert('Your score against Darth Vader is: ' + politicianGrade);
       // }
     }
   };
