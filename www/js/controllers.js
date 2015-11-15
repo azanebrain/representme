@@ -43,13 +43,84 @@ angular.module('starter.controllers', [])
 
 .controller('PlaylistsCtrl', function($scope) {
   $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
+    { title: 'Reggae', ID: 1 },
+    { title: 'Chill', ID: 2 },
+    { title: 'Dubstep', ID: 3 },
+    { title: 'Indie', ID: 4 },
+    { title: 'Rap', ID: 5 },
+    { title: 'Cowbell', ID: 6 }
   ];
+})
+
+.controller('LegislationCtrl', function($scope, $stateParams, $state) {
+  var id = $stateParams.id ? $stateParams.id : null;
+  console.log('here. id:', id);
+  $scope.legislations = [
+    { title: 'Legislation 1', id: 1,
+      content: '<p>Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI.</p>',
+      meta: {
+        link: 'http://representmenow.co',
+      },
+    },
+    { title: 'Legislation 2', id: 2,
+      content: '<p>Efficiently unleash cross-media information without cross-media value. Quickly maximize timely deliverables for real-time schemas. Dramatically maintain clicks-and-mortar solutions without functional solutions.</p>',
+      meta: {
+        link: 'http://representmenow.co',
+      },
+    },
+    { title: 'Legislation 3', id: 3,
+      content: '<p>Completely synergize resource taxing relationships via premier niche markets. Professionally cultivate one-to-one customer service with robust ideas. Dynamically innovate resource-leveling customer service for state of the art customer service.</p>',
+      meta: {
+        link: 'http://representmenow.co',
+      },
+    },
+    { title: 'Legislation 4', id: 4,
+      content: '<p>Objectively innovate empowered manufactured products whereas parallel platforms. Holisticly predominate extensible testing procedures for reliable supply chains. Dramatically engage top-line web services vis-a-vis cutting-edge deliverables.</p>',
+      meta: {
+        link: 'http://representmenow.co',
+      },
+    },
+    { title: 'Legislation 5', id: 5,
+      content: '<p>Proactively envisioned multimedia based expertise and cross-media growth strategies. Seamlessly visualize quality intellectual capital without superior collaboration and idea-sharing. Holistically pontificate installed base portals after maintainable products.</p>',
+      meta: {
+        link: 'http://representmenow.co',
+      },
+    },
+    { title: 'Legislation 6', id: 6,
+      content: '<p>Phosfluorescently engage worldwide methodologies with web-enabled technology. Interactively coordinate proactive e-commerce via process-centric "outside the box" thinking. Completely pursue scalable customer service through sustainable potentialities.</p>',
+      meta: {
+        link: 'http://representmenow.co',
+      },
+    }
+  ];
+  if ( id ) {
+    $scope.legislation = $scope.legislations[id - 1];
+    $scope.id = id;
+  }
+  
+  $scope.nextPageValue = function(id) {
+    if ($scope.legislations[id]) {
+      return parseInt(id) + 1;
+    }
+    console.log('on last page');
+    return false;
+  }
+  // Next page
+  // id (int) The ID of the current legislation item
+  // action (string) The action to take [approve, deny, undecided]
+  $scope.next = function(id, action) {
+    if ( action === 'approve' ) {
+      console.log('I approve', id);
+    } else if  ( action === 'deny' ) {
+      console.log('I deny', id);
+    } else {
+      console.log('I am undecided', id);
+    }
+    var nextPage = $scope.nextPageValue(id);
+    if ( false != nextPage ) {
+      $state.go('app.single',{id: nextPage });
+    }
+  };
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {

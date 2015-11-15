@@ -1,0 +1,9 @@
+<ion-view view-title="Playlists">
+  <ion-content>
+    <ion-list>
+      <ion-item ng-repeat="legislation in legislations" href="#/app/legislation/{{legislation.id}}">
+        {{legislation.title}}
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

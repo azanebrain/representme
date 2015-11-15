@@ -1,0 +1,12 @@
+<ion-view view-title="Legislation">
+  <ion-content class="padding">
+    <h1>{{legislation.title}}</h1>
+    <div ng-bind-html="legislation.content"></div>
+    <br><br>
+    <div class="button-bar">
+      <button class="button button-assertive" ng-click="next(id, 'deny')">DENY</button>
+      <button class="button button-stable" ng-click="next(id, 'undecided')">UNDECIDED</button>
+      <button class="button button-calm" ng-click="next(id, 'approve')">APPROVE</button>
+    </div>
+  </ion-content>
+</ion-view>
