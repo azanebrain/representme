@@ -45,7 +45,7 @@ angular.module('starter.controllers', [])
     var result = array.filter(function( obj ) {
       return result = obj[prop] == val;
     });
-  }
+  };
 
   // Track the user's ratings of legislation
   $scope.userRatings = [];
@@ -82,38 +82,46 @@ angular.module('starter.controllers', [])
   ];
 })
 
-.controller('LegislationCtrl', function($scope, $stateParams, $state, resources) {
-  // Set the post ID if it has been passed to the view
-  var id = $stateParams.id ? $stateParams.id : null;
-  console.log('loading legislationctrl');
-  var loadLegislation = function(){
-    console.log('loading legislation');
-  }
-  // Only request data if it hasn't already been loaded
-  // Get the post data
-  resources.posts.query({
-    'type[]': 'legislation',
-    'filter[status]': 'publish',
-    'filter[order]': 'DESC',
-  },
-  function(posts) {
-    // Success callback
-    console.log('post: ',posts);
-    $scope.posts = posts;
-    $scope.legislations = posts;
-    if ( id ) {
-      $scope.legislation = posts[id - 1];
-      $scope.id = id;
-    } 
-  },
-  function(error) {
-    // Error callback
-    console.warn('An error occured:',error);
-    $scope.posts = [{
-      title: 'Error',
-      content: error.data[0].message,
-    }];
-  });
+.controller('LegislationCtrl', function($scope, $stateParams, $state, resources, $ionicLoading) {
+  // Provide a loading overlay as the content loads
+  $scope.load = function() {
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
+    // Set the post ID if it has been passed to the view
+    var id = $stateParams.id ? $stateParams.id : null;
+    console.log('loading legislationctrl');
+    var loadLegislation = function(){
+      console.log('loading legislation');
+    }
+    // Only request data if it hasn't already been loaded
+    // Get the post data
+    resources.posts.query({
+      'type[]': 'legislation',
+      'filter[status]': 'publish',
+      'filter[order]': 'DESC',
+    },
+    function(posts) {
+      // Success callback
+      console.log('post: ',posts);
+      $scope.posts = posts;
+      $scope.legislations = posts;
+      if ( id ) {
+        $scope.legislation = posts[id - 1];
+        $scope.id = id;
+      } 
+      $ionicLoading.hide(); 
+    },
+    function(error) {
+      // Error callback
+      console.warn('An error occured:',error);
+      $scope.posts = [{
+        title: 'Error',
+        content: error.data[0].message,
+      }];
+      $ionicLoading.hide(); 
+    });
+  };
   
   // Determines if there is another page after the current legislation page 
   // @param id (int) The legislation ID
