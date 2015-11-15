@@ -37,11 +37,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ui.router', 'ngResou
       templateUrl: 'templates/menu.html',
       controller: 'AppCtrl'
     })
-    .state('app.search', {
-      url: '/search',
+    .state('app.browse', {
+      url: '/browse',
       views: {
         'menuContent': {
-          templateUrl: 'templates/search.html'
+          templateUrl: 'templates/legislationList.html',
+          controller: 'LegislationCtrl'
         }
       }
     })
@@ -54,12 +55,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ui.router', 'ngResou
         }
       }
     })
-    .state('app.browse', {
-      url: '/browse',
+    .state('app.search', {
+      url: '/search',
       views: {
         'menuContent': {
-          templateUrl: 'templates/legislationList.html',
-          controller: 'LegislationCtrl'
+          templateUrl: 'templates/search.html'
         }
       }
     })
@@ -71,7 +71,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ui.router', 'ngResou
           controller: 'LegislationCtrl'
         }
       }
+    })
+    .state('app.splash', {
+      url: '/splash',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/splash.html',
+        }
+      }
     });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/browse');
+  $urlRouterProvider.otherwise('/app/splash');
 });
