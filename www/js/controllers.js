@@ -153,54 +153,61 @@ angular.module('starter.controllers', [])
     } else {
       // The user is on the last legislation item
       console.log('all done. My stance:', $scope.userRatings);
-      for (var i = 0; i < $scope.politicians.length; i++) {
-        console.group('evaluating politician ' + $scope.politicians[i].name);
-        console.log('$scope.userRatings.length', $scope.userRatings.length);
-        var politicianScore = 0;
-        var agreementCounter = 0;
-        for (var x=0; x < $scope.userRatings.length; x++) {
-          // Only evaluate the ones the user has done becasue they might not have answered all
-          if ($scope.userRatings[x]) {
-            var userStance = $scope.userRatings[6];
-            console.log('comparing politician stance on ' + x + ': ' + $scope.politicians[i]['legislation' + x] +', against user stance: ' + $scope.userRatings[x].stance );
-            if ( 'u' == $scope.politicians[i]['legislation' + x] 
-               ||  $scope.userRatings[x].stance != $scope.politicians[i]['legislation' + x]
-            ) {
-              // If the politician hasn't voted
-              // or if the politician's stance disagrees with the user
-              $scope.userRatings[x].value = -1;
-              politicianScore -= 1;
-            } else {
-              $scope.userRatings[x].value = 1;
-              politicianScore++;
-              agreementCounter++;
-            }
-          }
-        }
-        // Compile the results of this politician compared to this user's stance
-
-        // Count the number of object elements in an array
-        function objectLength(obj) {
-          var result = 0;
-          for(var prop in obj) {
-            if (obj.hasOwnProperty(prop)) {
-              result++;
-            }
-          }
-          return result;
-        }
-        // Compile the user's grade of this politician
-        $scope.userGrades[i] = {
-          answeredQuestions: objectLength($scope.userRatings),
-          politicianScore: politicianScore,
-          agreementCounter: agreementCounter,
-        }
-        
-        console.log('politicianScore: ' + $scope.userGrades[i].politicianScore);
-        console.log('agreementCounter: ' + $scope.userGrades[i].agreementCounter + ' out of '  + $scope.userGrades[i].answeredQuestions);
-        // alert('Your score against ' + $scope.politicians[i].name + ' is: ' + politicianScore);
-        console.groupEnd();
-      }
+      $state.go('app.grade');
     }
   };
+})
+
+.controller('GradeCtrl', function($scope) {
+  // Only grade the politicians if the user has reviewed legislation
+  if ( $scope.userRatings.length > 0 ) {
+    for (var i = 0; i < $scope.politicians.length; i++) {
+      console.group('evaluating politician ' + $scope.politicians[i].name);
+      console.log('$scope.userRatings.length', $scope.userRatings.length);
+      var politicianScore = 0;
+      var agreementCounter = 0;
+      for (var x=0; x < $scope.userRatings.length; x++) {
+        // Only evaluate the ones the user has done becasue they might not have answered all
+        if ($scope.userRatings[x]) {
+          var userStance = $scope.userRatings[6];
+          console.log('comparing politician stance on ' + x + ': ' + $scope.politicians[i]['legislation' + x] +', against user stance: ' + $scope.userRatings[x].stance );
+          if ( 'u' == $scope.politicians[i]['legislation' + x] 
+             ||  $scope.userRatings[x].stance != $scope.politicians[i]['legislation' + x]
+          ) {
+            // If the politician hasn't voted
+            // or if the politician's stance disagrees with the user
+            $scope.userRatings[x].value = -1;
+            politicianScore -= 1;
+          } else {
+            $scope.userRatings[x].value = 1;
+            politicianScore++;
+            agreementCounter++;
+          }
+        }
+      }
+      // Compile the results of this politician compared to this user's stance
+
+      // Count the number of object elements in an array
+      function objectLength(obj) {
+        var result = 0;
+        for(var prop in obj) {
+          if (obj.hasOwnProperty(prop)) {
+            result++;
+          }
+        }
+        return result;
+      }
+      // Compile the user's grade of this politician
+      $scope.userGrades[i] = {
+        answeredQuestions: objectLength($scope.userRatings),
+        politicianScore: politicianScore,
+        agreementCounter: agreementCounter,
+      }
+      
+      console.log('politicianScore: ' + $scope.userGrades[i].politicianScore);
+      console.log('agreementCounter: ' + $scope.userGrades[i].agreementCounter + ' out of '  + $scope.userGrades[i].answeredQuestions);
+      // alert('Your score against ' + $scope.politicians[i].name + ' is: ' + politicianScore);
+      console.groupEnd();
+    }
+  }
 });

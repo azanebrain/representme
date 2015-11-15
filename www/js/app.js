@@ -31,24 +31,30 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ui.router', 'ngResou
 
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
-
     .state('app', {
-    url: '/app',
-    abstract: true,
-    templateUrl: 'templates/menu.html',
-    controller: 'AppCtrl'
-  })
-
-  .state('app.search', {
-    url: '/search',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/search.html'
+      url: '/app',
+      abstract: true,
+      templateUrl: 'templates/menu.html',
+      controller: 'AppCtrl'
+    })
+    .state('app.search', {
+      url: '/search',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/search.html'
+        }
       }
-    }
-  })
-
-  .state('app.browse', {
+    })
+    .state('app.grade', {
+      url: '/grade',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/grade.html',
+          controller: 'GradeCtrl'
+        }
+      }
+    })
+    .state('app.browse', {
       url: '/browse',
       views: {
         'menuContent': {
@@ -57,16 +63,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ui.router', 'ngResou
         }
       }
     })
-
-  .state('app.single', {
-    url: '/legislation/:id',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/legislation.html',
-        controller: 'LegislationCtrl'
+    .state('app.single', {
+      url: '/legislation/:id',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/legislation.html',
+          controller: 'LegislationCtrl'
+        }
       }
-    }
-  });
+    });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/browse');
 });

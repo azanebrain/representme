@@ -1,7 +1,7 @@
-<ion-view view-title="Playlists">
+<ion-view view-title="Legislation">
   <ion-content>
     <ion-list>
-      <ion-item ng-repeat="legislation in legislations" href="#/app/legislation/{{legislation.ID}}">
+      <ion-item ng-repeat="legislation in legislations" href="#/app/legislation/{{$index + 1}}">
         <span ng-bind-html="legislation.title"></span>
       </ion-item>
     </ion-list>
