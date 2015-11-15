@@ -167,8 +167,8 @@ angular.module('starter.controllers', [])
 })
 
 .controller('GradeCtrl', function($scope) {
-  // Only grade the politicians if the user has reviewed legislation
-  if ( $scope.userRatings.length > 0 ) {
+  // Reload the grade
+  $scope.reloadGrade = function(){
     for (var i = 0; i < $scope.politicians.length; i++) {
       console.group('evaluating politician ' + $scope.politicians[i].name);
       console.log('$scope.userRatings.length', $scope.userRatings.length);
@@ -212,10 +212,15 @@ angular.module('starter.controllers', [])
         agreementCounter: agreementCounter,
       }
       
+      $scope.userGrades[i].grade = $scope.userGrades[i].agreementCounter / $scope.userGrades[i].answeredQuestions * 100;
       console.log('politicianScore: ' + $scope.userGrades[i].politicianScore);
+      console.log('grade: ' + $scope.userGrades[i].grade);
       console.log('agreementCounter: ' + $scope.userGrades[i].agreementCounter + ' out of '  + $scope.userGrades[i].answeredQuestions);
-      // alert('Your score against ' + $scope.politicians[i].name + ' is: ' + politicianScore);
       console.groupEnd();
     }
+  }
+  // Only grade the politicians if the user has reviewed legislation
+  if ( $scope.userRatings.length > 0 ) {
+    $scope.reloadGrade();
   }
 });

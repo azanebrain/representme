@@ -3,20 +3,20 @@
     <p>You can use this page to review how your representatives fall in line with your stance on topics.</p>
     <br>
     <div ng-if="userRatings.length > 0">
-      for each politician
-      
-      total score 
-      stuff
+      <button class="button button-balanced button-block" ng-click="reloadGrade()">Reload Grade</button>
       <div class="card" ng-repeat="politician in politicians">
         <div class="item">
           <h2 ng-bind-html="politician.name"></h2>
         </div>
-        <div class="item assertive">
-          Agreement Score: {{userGrades[$index+1].answeredQuestions}}
+        <div class="item" >
+          <span ng-class="{
+            assertive: userGrades[$index].grade <= 50, 
+            balanced: userGrades[$index].grade >= 90
+          }">Grade: {{ userGrades[$index].grade | number:2 }}%</span>
         </div>
-        
-politicianScore
-agreementCounter
+        <div class="item">
+          <p class="subdued">You agree with this representative on {{userGrades[$index].agreementCounter}} out of {{userGrades[$index].answeredQuestions}} topics.</p>
+        </div>
       </div>
     </div>
     <div ng-if="userRatings.length < 1">
