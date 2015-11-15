@@ -39,6 +39,25 @@ angular.module('starter.controllers', [])
       $scope.closeLogin();
     }, 1000);
   };
+  
+  // Track the user's ratings of legislation
+  $scope.userRatings = [];
+  
+  // Politicians
+  // 'f'or
+  // 'a'gainst
+  // 'u'ndecided
+  $scope.politicians = [
+    {
+      name: 'DarthVader',
+      legislation1: 'a',
+      legislation2: 'f',
+      legislation3: 'a',
+      legislation4: 'a',
+      legislation5: 'u',
+      legislation6: 'a',
+    },
+  ];
 })
 
 .controller('PlaylistsCtrl', function($scope) {
@@ -109,16 +128,56 @@ angular.module('starter.controllers', [])
   // id (int) The ID of the current legislation item
   // action (string) The action to take [approve, deny, undecided]
   $scope.next = function(id, action) {
-    if ( action === 'approve' ) {
-      console.log('I approve', id);
-    } else if  ( action === 'deny' ) {
-      console.log('I deny', id);
+    if ( action === 'for' ) {
+      console.log('I am for ', id);
+      $scope.userRatings[id] = {
+        stance: 'f'
+      };
+    } else if  ( action === 'against' ) {
+      console.log('I am against ', id);
+      $scope.userRatings[id] = {
+        stance: 'a'
+      };
     } else {
       console.log('I am undecided', id);
+      $scope.userRatings[id] = {
+        stance: 'u'
+      };
     }
     var nextPage = $scope.nextPageValue(id);
     if ( false != nextPage ) {
       $state.go('app.single',{id: nextPage });
+    } else {
+      console.log('all done. My stance:', $scope.userRatings);
+      // foreach (var i = 0; i < $scope.politicians.length; i++) {
+        // console.log('evaluating politician: ' + politician.name);
+        for (var i = 0; i < $scope.politicians.length; i++) {
+            console.log('evaluating politician ' + $scope.politicians[i].name);
+            console.log('$scope.userRatings.length', $scope.userRatings.length);
+            var politicianGrade = 0;
+            for (var x=0; x < $scope.userRatings.length; x++) {
+              // Only evaluate the ones the user has done becasue they might not have answered all
+              if ($scope.userRatings[x]) {
+                var userStance = $scope.userRatings[6];
+              
+                console.log('comparing politician stance on ' + x + ': ' + $scope.politicians[i]['legislation' + x] +', against user stance: ' + $scope.userRatings[x].stance );
+                if ( 'u' == $scope.politicians[i]['legislation' + x] 
+                   ||  $scope.userRatings[x].stance != $scope.politicians[i]['legislation' + x]
+                ) {
+                  // If the politician hasn't voted
+                  // or if the politician's stance disagrees with the user
+                  $scope.userRatings[x].value = -1;
+                  politicianGrade -= 1;
+                } else {
+                  $scope.userRatings[x].value = 1;
+                  politicianGrade++;
+                }
+                console.log('politicianGrade:' + politicianGrade);
+              }
+            }
+        }
+        alert('Your score against Darht Vader is: ' + politicianGrade);
+      // }
     }
   };
 })
