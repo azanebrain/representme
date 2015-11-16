@@ -47,6 +47,7 @@ angular.module('starter.controllers', [])
     });
   };
 
+  // TODO: Make these services
   // Track the user's ratings of legislation
   $scope.userRatings = [];
   // The user's grades of politicians
@@ -56,6 +57,7 @@ angular.module('starter.controllers', [])
   // 'f'or
   // 'a'gainst
   // 'u'ndecided
+  // TODO: Pull this data from the database
   $scope.politicians = [
     {
       name: 'Darrell Issa',
@@ -162,6 +164,7 @@ angular.module('starter.controllers', [])
         stance: 'a'
       };
     } else {
+      //TODO: Add support for legislation that the candidate could not vote for. Maybe separate the content into separate types or taxonomies (House Legislation, Congress Politician, Senator Politician, etc)
       console.log('I am undecided ', id);
       $scope.userRatings[id] = {
         stance: 'u'
@@ -191,7 +194,6 @@ angular.module('starter.controllers', [])
       for (var x=0; x < $scope.userRatings.length; x++) {
         // Only evaluate the ones the user has done becasue they might not have answered all
         if ($scope.userRatings[x]) {
-          var userStance = $scope.userRatings[6];
           console.log('comparing politician stance on ' + x + ': ' + $scope.politicians[i]['legislation' + x] +', against user stance: ' + $scope.userRatings[x].stance );
           if ( 'u' == $scope.politicians[i]['legislation' + x] 
              ||  $scope.userRatings[x].stance != $scope.politicians[i]['legislation' + x]
