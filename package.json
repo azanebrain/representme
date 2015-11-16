@@ -22,7 +22,8 @@
     "com.ionic.keyboard"
   ],
   "cordovaPlatforms": [
-    "ios"
+    "ios",
+    "android"
   ],
   "scripts": {
     "build": "echo \"Error: no build command specified\" && exit 1",
