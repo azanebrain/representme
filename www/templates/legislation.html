@@ -2,8 +2,12 @@
   <ion-content class="padding">
     <h1 ng-bind-html="legislation.title"></h1>
     <div ng-bind-html="legislation.content"></div>
+    <div ng-if="legislation.meta.link">
+      Source: <a href="{{legislation.meta.link}}">{{legislation.meta.link}}</a>
+    </div>
     <br><br>
     <button class="button button-block button-stable" ng-click="next(id, 'undecided')">UNDECIDED</button>
+    <br><br>
   </ion-content>
   <div class="bar bar-footer" style="no-padding">
     <div class="button-bar">
