@@ -3,6 +3,9 @@
     <ion-list>
       <ion-item ng-repeat="legislation in legislations" href="#/app/legislation/{{$index + 1}}">
         <span ng-bind-html="legislation.title"></span>
+        <span class="item-icon-right">
+          <i class="icon ion-chevron-right icon-accessory"></i>
+        </span>
       </ion-item>
     </ion-list>
   </ion-content>
