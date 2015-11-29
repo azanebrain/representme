@@ -235,6 +235,13 @@ angular.module('starter.controllers', [])
       console.groupEnd();
     }
   }
+  
+  $scope.doRefresh = function() {
+    $scope.reloadGrade();
+    $scope.$broadcast('scroll.refreshComplete');
+    $scope.$apply()
+  };
+  
   // Only grade the politicians if the user has reviewed legislation
   if ( $scope.userRatings.length > 0 ) {
     $scope.reloadGrade();

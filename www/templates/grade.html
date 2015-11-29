@@ -4,6 +4,9 @@
     <br>
     <div ng-if="userRatings.length > 0">
       <button class="button button-balanced button-block" ng-click="reloadGrade()">Reload Grade</button>
+      <p><em>(Or pull to refresh)</em></p>
+      <ion-refresher pulling-text="Pull to refresh" on-refresh="doRefresh()">
+      </ion-refresher>
       <div class="card" ng-repeat="politician in politicians">
         <div class="item item-text-wrap">
           <h2>
